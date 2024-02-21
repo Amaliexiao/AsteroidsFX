@@ -39,19 +39,19 @@ public class PlayerControlSystem implements IEntityProcessingService {
             }
             
         if (player.getX() < 0) {
-            player.setX(1);
+            player.setX(2);
         }
 
         if (player.getX() > gameData.getDisplayWidth()) {
-            player.setX(gameData.getDisplayWidth()-1);
+            player.setX(gameData.getDisplayWidth()-2);
         }
 
         if (player.getY() < 0) {
-            player.setY(1);
+            player.setY(2);
         }
 
         if (player.getY() > gameData.getDisplayHeight()) {
-            player.setY(gameData.getDisplayHeight()-1);
+            player.setY(gameData.getDisplayHeight()-2);
         }
             
                                         

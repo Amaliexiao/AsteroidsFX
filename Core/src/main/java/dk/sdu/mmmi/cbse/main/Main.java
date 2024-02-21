@@ -7,6 +7,7 @@ import dk.sdu.mmmi.cbse.common.data.World;
 import dk.sdu.mmmi.cbse.common.services.IEntityProcessingService;
 import dk.sdu.mmmi.cbse.common.services.IGamePluginService;
 import dk.sdu.mmmi.cbse.common.services.IPostEntityProcessingService;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -14,7 +15,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.ServiceLoader;
 import java.util.concurrent.ConcurrentHashMap;
+
 import static java.util.stream.Collectors.toList;
+
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -31,7 +34,7 @@ public class Main extends Application {
     private final Map<Entity, Polygon> polygons = new ConcurrentHashMap<>();
     private Pane gameWindow;
     private int currentEntityAmount;
-    
+
 
     public static void main(String[] args) {
         launch(Main.class);
@@ -114,18 +117,18 @@ public class Main extends Application {
         for (IEntityProcessingService entityProcessorService : getEntityProcessingServices()) {
             entityProcessorService.process(gameData, world);
         }
-        if(currentEntityAmount< world.getEntities().size()){
+        if (currentEntityAmount < world.getEntities().size()) {
             for (Entity entity : world.getEntities()) {
-                if(polygons.get(entity)==null){
+                if (polygons.get(entity) == null) {
                     Polygon polygon = new Polygon(entity.getPolygonCoordinates());
                     polygons.put(entity, polygon);
                     gameWindow.getChildren().add(polygon);
                 }
             }
         }
-        if(currentEntityAmount> world.getEntities().size()){
-            for (Map.Entry<Entity, Polygon> polygon : polygons.entrySet()){
-                if(world.getEntity(polygon.getKey().getID()) == null){
+        if (currentEntityAmount > world.getEntities().size()) {
+            for (Map.Entry<Entity, Polygon> polygon : polygons.entrySet()) {
+                if (world.getEntity(polygon.getKey().getID()) == null) {
                     System.out.println("null found");
                     gameWindow.getChildren().remove(polygon.getValue());
                     polygons.remove(polygon.getKey());
@@ -143,7 +146,7 @@ public class Main extends Application {
     private void draw() {
         for (Entity entity : world.getEntities()) {
             Polygon polygon = polygons.get(entity);
-            if(polygon!= null){
+            if (polygon != null) {
                 polygon.setTranslateX(entity.getX());
                 polygon.setTranslateY(entity.getY());
                 polygon.setRotate(entity.getRotation());
