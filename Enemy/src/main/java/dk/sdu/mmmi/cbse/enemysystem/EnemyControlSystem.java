@@ -7,6 +7,8 @@ import dk.sdu.mmmi.cbse.common.data.GameKeys;
 import dk.sdu.mmmi.cbse.common.data.World;
 import dk.sdu.mmmi.cbse.common.services.IEntityProcessingService;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Collection;
 import java.util.ServiceLoader;
 
@@ -14,53 +16,38 @@ import static java.util.stream.Collectors.toList;
 
 
 public class EnemyControlSystem implements IEntityProcessingService {
-
     @Override
     public void process(GameData gameData, World world) {
-            
         for (Entity enemy : world.getEntities(Enemy.class)) {
 
-            double randomNumber = 0;
+            double changeX = Math.cos(Math.toRadians(enemy.getRotation())) + 1 * Math.random();
+            double changeY = Math.sin(Math.toRadians(enemy.getRotation())) + 1 * Math.random();
+            enemy.setX(enemy.getX() + changeX);
+            enemy.setY(enemy.getY() + changeY);
+            enemy.setRotation(enemy.getRotation() + 1 * Math.random());
 
-            randomNumber  = Math.random()*10;
-
-            if(false){
-                enemy.setRotation(enemy.getRotation() - 5);
+            if (100 * Math.random() > 98) {
+                for (BulletSPI bullet : getBulletSPIs()) {
+                    world.addEntity(bullet.createBullet(enemy, gameData));
+                }
             }
-            if(false){
-                enemy.setRotation(enemy.getRotation() + 5);
-            }
-
-            if(false){
-                double changeX = Math.cos(Math.toRadians(enemy.getRotation()));
-                double changeY = Math.sin(Math.toRadians(enemy.getRotation()));
-                enemy.setX(enemy.getX() + changeX);
-                enemy.setY(enemy.getY() + changeY);
-            }
-
-//            if(gameData.getKeys().isPressed(GameKeys.SPACE)){
-//                for(BulletSPI bullet : getBulletSPIs()){
-//                    world.addEntity(bullet.createBullet(player,gameData));
-//                }
-//            }
 
             if (enemy.getX() < -2) {
-                enemy.setX(gameData.getDisplayWidth()+1);
+                enemy.setX(gameData.getDisplayWidth() + 1);
             }
 
-            if (enemy.getX() > gameData.getDisplayWidth()+2) {
+            if (enemy.getX() > gameData.getDisplayWidth() + 2) {
                 enemy.setX(-1);
             }
 
             if (enemy.getY() < -2) {
-                enemy.setY(gameData.getDisplayHeight()+1);
+                enemy.setY(gameData.getDisplayHeight() + 1);
             }
 
-            if (enemy.getY() > gameData.getDisplayHeight()+2) {
+            if (enemy.getY() > gameData.getDisplayHeight() + 2) {
                 enemy.setY(-1);
             }
-            
-                                        
+
         }
     }
 
