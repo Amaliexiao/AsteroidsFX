@@ -132,7 +132,6 @@ public class Main extends Application {
         if (currentEntityAmount > world.getEntities().size()) {
             for (Map.Entry<Entity, Polygon> polygon : polygons.entrySet()) {
                 if (world.getEntity(polygon.getKey().getID()) == null) {
-                    System.out.println("null found");
                     gameWindow.getChildren().remove(polygon.getValue());
                     polygons.remove(polygon.getKey());
                 }

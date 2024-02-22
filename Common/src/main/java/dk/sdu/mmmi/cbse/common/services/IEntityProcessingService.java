@@ -7,11 +7,10 @@ public interface IEntityProcessingService {
 
     /**
      *
-     *
-     *
      * @param gameData
      * @param world
      * @throws
+     * @pre IGamePluginService should run start
      */
     void process(GameData gameData, World world);
 }

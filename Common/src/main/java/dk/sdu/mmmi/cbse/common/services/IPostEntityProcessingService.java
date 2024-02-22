@@ -8,6 +8,13 @@ import dk.sdu.mmmi.cbse.common.data.World;
  * @author jcs
  */
 public interface IPostEntityProcessingService {
+    /**
+     *
+     * @param gameData
+     * @param world
+     * @throws
+     *
+     */
 
     void process(GameData gameData, World world);
 }
