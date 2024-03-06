@@ -26,13 +26,13 @@ public class EnemyPlugin implements IGamePluginService {
         enemy.setPolygonCoordinates(-5,-5,10,0,-5,5);
         enemy.setX(gameData.getDisplayWidth()+1);
         enemy.setY(Math.random()*gameData.getDisplayHeight());
+        enemy.setRadius(8);
         return enemy;
     }
 
     @Override
     public void stop(GameData gameData, World world) {
         // Remove entities
-//        world.removeEntity(enemy);
         for (Entity e : world.getEntities()) {
             if (e.getClass() == Enemy.class) {
                 world.removeEntity(e);
