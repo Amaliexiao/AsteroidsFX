@@ -8,16 +8,8 @@ import dk.sdu.mmmi.cbse.common.services.IEntityProcessingService;
 import dk.sdu.mmmi.cbse.common.services.IGamePluginService;
 import dk.sdu.mmmi.cbse.common.services.IPostEntityProcessingService;
 
-import java.lang.module.Configuration;
-import java.lang.module.ModuleFinder;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.nio.file.Paths;
-import java.lang.module.ModuleReference;
-import java.lang.module.ModuleDescriptor;
-import java.util.stream.Collectors;
-
-import static java.util.stream.Collectors.toList;
 
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
@@ -27,6 +19,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.shape.Polygon;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 public class Main extends Application {
 
@@ -35,29 +28,21 @@ public class Main extends Application {
     private final Map<Entity, Polygon> polygons = new ConcurrentHashMap<>();
     private Pane gameWindow;
     private int currentEntityAmount;
-    private static ModuleLayer layer;
+    private Game game;
 
-
-    public static void main(String[] args){
-        ModuleFinder finder = ModuleFinder.of(Paths.get("plugins"));
-        List<String> plugins = finder
-                .findAll()
-                .stream()
-                .map(ModuleReference::descriptor)
-                .map(ModuleDescriptor::name)
-                .collect(Collectors.toList());
-        ModuleLayer parent = ModuleLayer.boot();
-        Configuration cf = parent.configuration().resolve(finder, ModuleFinder.of(), plugins);
-        layer = ModuleLayer
-                .boot()
-                .defineModulesWithOneLoader(cf, ClassLoader.getSystemClassLoader());
-
+    public static void main(String[] args) {
         launch(Main.class);
     }
 
 
     @Override
-    public void start(Stage window){
+    public void start(Stage window) {
+        AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext(ModuleConfig.class);
+
+        for (String beanName : ctx.getBeanDefinitionNames()) {
+            System.out.println(beanName);
+        }
+        game = ctx.getBean(Game.class);
 
         Text text = new Text(10, 20, "Destroyed asteroids: 0");
         gameWindow = new Pane();
@@ -97,7 +82,7 @@ public class Main extends Application {
         });
 
         // Lookup all Game Plugins using ServiceLoader
-        for (IGamePluginService iGamePlugin : getPluginServices()) {
+        for (IGamePluginService iGamePlugin : game.getGamePluginServices()) {
             iGamePlugin.start(gameData, world);
         }
         for (Entity entity : world.getEntities()) {
@@ -130,10 +115,10 @@ public class Main extends Application {
 
     private void update() {
 
-        for (IEntityProcessingService entityProcessorService : getEntityProcessingServices()) {
+        for (IEntityProcessingService entityProcessorService : game.getEntityProcessingServices()) {
             entityProcessorService.process(gameData, world);
         }
-        for (IPostEntityProcessingService postEntityProcessorService : getPostEntityProcessingServices()) {
+        for (IPostEntityProcessingService postEntityProcessorService : game.getPostEntityProcessingServices()) {
             postEntityProcessorService.process(gameData, world);
         }
         if (currentEntityAmount < world.getEntities().size()) {
@@ -166,17 +151,5 @@ public class Main extends Application {
 
             }
         }
-    }
-
-    private Collection<? extends IGamePluginService> getPluginServices() {
-        return ServiceLoader.load(layer, IGamePluginService.class).stream().map(ServiceLoader.Provider::get).collect(toList());
-    }
-
-    private Collection<? extends IEntityProcessingService> getEntityProcessingServices() {
-        return ServiceLoader.load(layer, IEntityProcessingService.class).stream().map(ServiceLoader.Provider::get).collect(toList());
-    }
-
-    private Collection<? extends IPostEntityProcessingService> getPostEntityProcessingServices() {
-        return ServiceLoader.load(layer, IPostEntityProcessingService.class).stream().map(ServiceLoader.Provider::get).collect(toList());
     }
 }

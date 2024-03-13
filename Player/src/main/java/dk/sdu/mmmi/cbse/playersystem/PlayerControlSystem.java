@@ -27,8 +27,8 @@ public class PlayerControlSystem implements IEntityProcessingService, IPostEntit
                 player.setRotation(player.getRotation() + 5);                
             }
             if (gameData.getKeys().isDown(GameKeys.UP)) {
-                double changeX = Math.cos(Math.toRadians(player.getRotation()))*2;
-                double changeY = Math.sin(Math.toRadians(player.getRotation()))*2;
+                double changeX = Math.cos(Math.toRadians(player.getRotation()))*1.5;
+                double changeY = Math.sin(Math.toRadians(player.getRotation()))*1.5;
                 player.setX(player.getX() + changeX);
                 player.setY(player.getY() + changeY);
             }
