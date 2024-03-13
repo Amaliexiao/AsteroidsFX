@@ -8,10 +8,14 @@ import dk.sdu.mmmi.cbse.common.services.IEntityProcessingService;
 import dk.sdu.mmmi.cbse.common.services.IGamePluginService;
 import dk.sdu.mmmi.cbse.common.services.IPostEntityProcessingService;
 
-import java.util.Collection;
-import java.util.Map;
-import java.util.ServiceLoader;
+import java.lang.module.Configuration;
+import java.lang.module.ModuleFinder;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.nio.file.Paths;
+import java.lang.module.ModuleReference;
+import java.lang.module.ModuleDescriptor;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 
@@ -31,14 +35,30 @@ public class Main extends Application {
     private final Map<Entity, Polygon> polygons = new ConcurrentHashMap<>();
     private Pane gameWindow;
     private int currentEntityAmount;
+    private static ModuleLayer layer;
 
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ClassNotFoundException {
+        ModuleFinder finder = ModuleFinder.of(Paths.get("plugins"));
+        List<String> plugins = finder
+                .findAll()
+                .stream()
+                .map(ModuleReference::descriptor)
+                .map(ModuleDescriptor::name)
+                .collect(Collectors.toList());
+        ModuleLayer parent = ModuleLayer.boot();
+        Configuration cf = parent.configuration().resolve(finder, ModuleFinder.of(), plugins);
+        layer = ModuleLayer
+                .boot()
+                .defineModulesWithOneLoader(cf, ClassLoader.getSystemClassLoader());
+
         launch(Main.class);
     }
 
+
     @Override
     public void start(Stage window) throws Exception {
+
         Text text = new Text(10, 20, "Destroyed asteroids: 0");
         gameWindow = new Pane();
         gameWindow.setPrefSize(gameData.getDisplayWidth(), gameData.getDisplayHeight());
@@ -110,9 +130,11 @@ public class Main extends Application {
 
     private void update() {
 
-        // Update
         for (IEntityProcessingService entityProcessorService : getEntityProcessingServices()) {
             entityProcessorService.process(gameData, world);
+        }
+        for (IPostEntityProcessingService postEntityProcessorService : getPostEntityProcessingServices()) {
+            postEntityProcessorService.process(gameData, world);
         }
         if (currentEntityAmount < world.getEntities().size()) {
             for (Entity entity : world.getEntities()) {
@@ -131,12 +153,7 @@ public class Main extends Application {
                 }
             }
         }
-
         currentEntityAmount = world.getEntities().size();
-
-//        for (IPostEntityProcessingService postEntityProcessorService : getPostEntityProcessingServices()) {
-//            postEntityProcessorService.process(gameData, world);
-//        }
     }
 
     private void draw() {
@@ -152,14 +169,14 @@ public class Main extends Application {
     }
 
     private Collection<? extends IGamePluginService> getPluginServices() {
-        return ServiceLoader.load(IGamePluginService.class).stream().map(ServiceLoader.Provider::get).collect(toList());
+        return ServiceLoader.load(layer, IGamePluginService.class).stream().map(ServiceLoader.Provider::get).collect(toList());
     }
 
     private Collection<? extends IEntityProcessingService> getEntityProcessingServices() {
-        return ServiceLoader.load(IEntityProcessingService.class).stream().map(ServiceLoader.Provider::get).collect(toList());
+        return ServiceLoader.load(layer, IEntityProcessingService.class).stream().map(ServiceLoader.Provider::get).collect(toList());
     }
 
     private Collection<? extends IPostEntityProcessingService> getPostEntityProcessingServices() {
-        return ServiceLoader.load(IPostEntityProcessingService.class).stream().map(ServiceLoader.Provider::get).collect(toList());
+        return ServiceLoader.load(layer, IPostEntityProcessingService.class).stream().map(ServiceLoader.Provider::get).collect(toList());
     }
 }
