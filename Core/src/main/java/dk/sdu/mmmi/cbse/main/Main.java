@@ -38,7 +38,7 @@ public class Main extends Application {
     private static ModuleLayer layer;
 
 
-    public static void main(String[] args) throws ClassNotFoundException {
+    public static void main(String[] args){
         ModuleFinder finder = ModuleFinder.of(Paths.get("plugins"));
         List<String> plugins = finder
                 .findAll()
@@ -57,7 +57,7 @@ public class Main extends Application {
 
 
     @Override
-    public void start(Stage window) throws Exception {
+    public void start(Stage window){
 
         Text text = new Text(10, 20, "Destroyed asteroids: 0");
         gameWindow = new Pane();
