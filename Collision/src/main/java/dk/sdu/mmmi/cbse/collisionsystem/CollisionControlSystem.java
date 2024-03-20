@@ -13,9 +13,6 @@ public class CollisionControlSystem implements IPostEntityProcessingService {
                 if (entity1.getID().equals(entity2.getID())) {
                     continue;
                 }
-//                if(entity1.equals(Player.class)){
-//                    System.out.println("player detected");
-//                }
                 if (this.collides(entity1, entity2)) {
                     world.removeEntity(entity1);
                     world.removeEntity(entity2);
@@ -23,6 +20,7 @@ public class CollisionControlSystem implements IPostEntityProcessingService {
             }
         }
     }
+
     public Boolean collides(Entity entity1, Entity entity2) {
         float dx = (float) entity1.getX() - (float) entity2.getX();
         float dy = (float) entity1.getY() - (float) entity2.getY();
