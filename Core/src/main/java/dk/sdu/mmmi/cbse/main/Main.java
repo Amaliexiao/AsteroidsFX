@@ -8,15 +8,8 @@ import dk.sdu.mmmi.cbse.common.services.IEntityProcessingService;
 import dk.sdu.mmmi.cbse.common.services.IGamePluginService;
 import dk.sdu.mmmi.cbse.common.services.IPostEntityProcessingService;
 
-import java.lang.module.Configuration;
-import java.lang.module.ModuleFinder;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.nio.file.Paths;
-import java.lang.module.ModuleReference;
-import java.lang.module.ModuleDescriptor;
-import java.util.stream.Collectors;
-
 import static java.util.stream.Collectors.toList;
 
 import javafx.animation.AnimationTimer;
