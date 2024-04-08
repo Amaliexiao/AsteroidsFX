@@ -10,6 +10,7 @@ import dk.sdu.mmmi.cbse.common.services.IPostEntityProcessingService;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+
 import static java.util.stream.Collectors.toList;
 
 import javafx.animation.AnimationTimer;
@@ -30,13 +31,13 @@ public class Main extends Application {
     private int currentEntityAmount;
 
 
-    public static void main(String[] args){
+    public static void main(String[] args) {
         launch(Main.class);
     }
 
 
     @Override
-    public void start(Stage window){
+    public void start(Stage window) {
 
         Text text = new Text(10, 20, "Destroyed asteroids: 0");
         gameWindow = new Pane();
@@ -115,20 +116,22 @@ public class Main extends Application {
         for (IPostEntityProcessingService postEntityProcessorService : getPostEntityProcessingServices()) {
             postEntityProcessorService.process(gameData, world);
         }
-        if (currentEntityAmount < world.getEntities().size()) {
-            for (Entity entity : world.getEntities()) {
-                if (polygons.get(entity) == null) {
-                    Polygon polygon = new Polygon(entity.getPolygonCoordinates());
-                    polygons.put(entity, polygon);
-                    gameWindow.getChildren().add(polygon);
+        if (currentEntityAmount != world.getEntities().size()) {
+            if (currentEntityAmount < world.getEntities().size()) {
+                for (Entity entity : world.getEntities()) {
+                    if (polygons.get(entity) == null) {
+                        Polygon polygon = new Polygon(entity.getPolygonCoordinates());
+                        polygons.put(entity, polygon);
+                        gameWindow.getChildren().add(polygon);
+                    }
                 }
             }
-        }
-        if (currentEntityAmount > world.getEntities().size()) {
-            for (Map.Entry<Entity, Polygon> polygon : polygons.entrySet()) {
-                if (world.getEntity(polygon.getKey().getID()) == null) {
-                    gameWindow.getChildren().remove(polygon.getValue());
-                    polygons.remove(polygon.getKey());
+            if (currentEntityAmount > world.getEntities().size()) {
+                for (Map.Entry<Entity, Polygon> polygon : polygons.entrySet()) {
+                    if (world.getEntity(polygon.getKey().getID()) == null) {
+                        gameWindow.getChildren().remove(polygon.getValue());
+                        polygons.remove(polygon.getKey());
+                    }
                 }
             }
         }

@@ -11,7 +11,8 @@ public class Entity implements Serializable {
     private double x;
     private double y;
     private double rotation;
-    private double radius;
+    private int radius;
+    private boolean isCollided;
 
     public String getID() {
         return ID.toString();
@@ -52,11 +53,19 @@ public class Entity implements Serializable {
         return rotation;
     }
 
-    public double getRadius() {
+    public int getRadius() {
         return radius;
     }
 
-    public void setRadius(double radius) {
+    public void setRadius(int radius) {
         this.radius = radius;
+    }
+
+    public boolean isCollided() {
+        return isCollided;
+    }
+
+    public void setCollided(boolean collided) {
+        isCollided = collided;
     }
 }

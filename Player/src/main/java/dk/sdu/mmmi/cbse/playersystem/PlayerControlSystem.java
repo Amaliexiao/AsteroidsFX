@@ -18,43 +18,43 @@ public class PlayerControlSystem implements IEntityProcessingService, IPostEntit
 
     @Override
     public void process(GameData gameData, World world) {
-            
         for (Entity player : world.getEntities(Player.class)) {
             if (gameData.getKeys().isDown(GameKeys.LEFT)) {
-                player.setRotation(player.getRotation() - 5);                
+                player.setRotation(player.getRotation() - 4);
             }
             if (gameData.getKeys().isDown(GameKeys.RIGHT)) {
-                player.setRotation(player.getRotation() + 5);                
+                player.setRotation(player.getRotation() + 4);
             }
             if (gameData.getKeys().isDown(GameKeys.UP)) {
-                double changeX = Math.cos(Math.toRadians(player.getRotation()))*2;
-                double changeY = Math.sin(Math.toRadians(player.getRotation()))*2;
+                double changeX = Math.cos(Math.toRadians(player.getRotation())) * 1.5;
+                double changeY = Math.sin(Math.toRadians(player.getRotation())) * 1.5;
                 player.setX(player.getX() + changeX);
                 player.setY(player.getY() + changeY);
             }
-            if(gameData.getKeys().isPressed(GameKeys.SPACE)){
-                for(BulletSPI bullet : getBulletSPIs()){
-                    world.addEntity(bullet.createBullet(player,gameData));
+            if (gameData.getKeys().isPressed(GameKeys.SPACE)) {
+                for (BulletSPI bullet : getBulletSPIs()) {
+                    world.addEntity(bullet.createBullet(player, gameData));
                 }
             }
-            
-        if (player.getX() < 0) {
-            player.setX(2);
-        }
 
-        if (player.getX() > gameData.getDisplayWidth()) {
-            player.setX(gameData.getDisplayWidth()-2);
-        }
+            if (player.getX() < 0) {
+                player.setX(2);
+            }
 
-        if (player.getY() < 0) {
-            player.setY(2);
-        }
+            if (player.getX() > gameData.getDisplayWidth()) {
+                player.setX(gameData.getDisplayWidth() - 2);
+            }
 
-        if (player.getY() > gameData.getDisplayHeight()) {
-            player.setY(gameData.getDisplayHeight()-2);
-        }
-            
-                                        
+            if (player.getY() < 0) {
+                player.setY(2);
+            }
+
+            if (player.getY() > gameData.getDisplayHeight()) {
+                player.setY(gameData.getDisplayHeight() - 2);
+            }
+            if(player.isCollided()){
+                world.removeEntity(player);
+            }
         }
     }
 

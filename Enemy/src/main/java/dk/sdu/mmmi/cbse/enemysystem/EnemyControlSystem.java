@@ -24,9 +24,9 @@ public class EnemyControlSystem implements IEntityProcessingService, IPostEntity
             enemy.setY(enemy.getY() + changeY);
             enemy.setRotation(enemy.getRotation() + 1 * Math.random());
 
-            if (100 * Math.random() > 98) {
+            if (1000 * Math.random() > 998) {
                 for (BulletSPI bullet : getBulletSPIs()) {
-                    world.addEntity(bullet.createBullet(enemy,gameData));
+                    world.addEntity(bullet.createBullet(enemy, gameData));
                 }
             }
 
@@ -45,7 +45,9 @@ public class EnemyControlSystem implements IEntityProcessingService, IPostEntity
             if (enemy.getY() > gameData.getDisplayHeight() + 2) {
                 enemy.setY(-1);
             }
-
+            if(enemy.isCollided()){
+                world.removeEntity(enemy);
+            }
         }
     }
 
