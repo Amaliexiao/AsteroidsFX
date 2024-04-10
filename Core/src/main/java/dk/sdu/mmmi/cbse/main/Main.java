@@ -29,6 +29,7 @@ public class Main extends Application {
     private final Map<Entity, Polygon> polygons = new ConcurrentHashMap<>();
     private Pane gameWindow;
     private int currentEntityAmount;
+    private int score= 1;
 
 
     public static void main(String[] args) {
@@ -38,11 +39,11 @@ public class Main extends Application {
 
     @Override
     public void start(Stage window) {
-
-        Text text = new Text(10, 20, "Destroyed asteroids: 0");
+        Text text = new Text(10, 20, "Destroyed asteroids: " + score);
         gameWindow = new Pane();
         gameWindow.setPrefSize(gameData.getDisplayWidth(), gameData.getDisplayHeight());
         gameWindow.getChildren().add(text);
+
         currentEntityAmount = world.getEntities().size();
 
         Scene scene = new Scene(gameWindow);
@@ -109,6 +110,8 @@ public class Main extends Application {
     }
 
     private void update() {
+        Text text = new Text(10, 20, "Destroyed asteroids: " + score);
+        gameWindow.getChildren().set(1,text);
 
         for (IEntityProcessingService entityProcessorService : getEntityProcessingServices()) {
             entityProcessorService.process(gameData, world);
