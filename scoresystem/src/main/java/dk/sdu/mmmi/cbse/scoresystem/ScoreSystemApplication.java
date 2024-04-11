@@ -16,8 +16,8 @@ public class ScoreSystemApplication {
         SpringApplication.run(ScoreSystemApplication.class, args);
     }
 
-    @GetMapping("/score")
-    public Long calculateHealt(@RequestParam(value = "point") Long point) {
+    @GetMapping("/AddToScore")
+    public Long UpdateScore(@RequestParam(value = "point") Long point) {
         totalScore += point;
         return totalScore;
     }

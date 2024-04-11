@@ -13,7 +13,7 @@ import java.util.ServiceLoader;
 import static java.util.stream.Collectors.toList;
 
 
-public class EnemyControlSystem implements IEntityProcessingService, IPostEntityProcessingService {
+public class EnemyControlSystem implements IEntityProcessingService {
     @Override
     public void process(GameData gameData, World world) {
         for (Entity enemy : world.getEntities(Enemy.class)) {
@@ -24,7 +24,7 @@ public class EnemyControlSystem implements IEntityProcessingService, IPostEntity
             enemy.setY(enemy.getY() + changeY);
             enemy.setRotation(enemy.getRotation() + 1 * Math.random());
 
-            if (1000 * Math.random() > 998) {
+            if (1000 * Math.random() > 970) {
                 for (BulletSPI bullet : getBulletSPIs()) {
                     world.addEntity(bullet.createBullet(enemy, gameData));
                 }
