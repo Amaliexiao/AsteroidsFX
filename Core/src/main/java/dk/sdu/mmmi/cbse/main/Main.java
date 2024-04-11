@@ -28,8 +28,7 @@ public class Main extends Application {
     private final World world = new World();
     private final Map<Entity, Polygon> polygons = new ConcurrentHashMap<>();
     private Pane gameWindow;
-    private int currentEntityAmount;
-    private int score= 1;
+    private int score = 1;
 
 
     public static void main(String[] args) {
@@ -43,8 +42,6 @@ public class Main extends Application {
         gameWindow = new Pane();
         gameWindow.setPrefSize(gameData.getDisplayWidth(), gameData.getDisplayHeight());
         gameWindow.getChildren().add(text);
-
-        currentEntityAmount = world.getEntities().size();
 
         Scene scene = new Scene(gameWindow);
         scene.setOnKeyPressed(event -> {
@@ -111,7 +108,7 @@ public class Main extends Application {
 
     private void update() {
         Text text = new Text(10, 20, "Destroyed asteroids: " + score);
-        gameWindow.getChildren().set(1,text);
+        gameWindow.getChildren().set(1, text);
 
         for (IEntityProcessingService entityProcessorService : getEntityProcessingServices()) {
             entityProcessorService.process(gameData, world);
@@ -119,31 +116,29 @@ public class Main extends Application {
         for (IPostEntityProcessingService postEntityProcessorService : getPostEntityProcessingServices()) {
             postEntityProcessorService.process(gameData, world);
         }
-        if (currentEntityAmount != world.getEntities().size()) {
-            if (currentEntityAmount < world.getEntities().size()) {
-                for (Entity entity : world.getEntities()) {
-                    if (polygons.get(entity) == null) {
-                        Polygon polygon = new Polygon(entity.getPolygonCoordinates());
-                        polygons.put(entity, polygon);
-                        gameWindow.getChildren().add(polygon);
-                    }
-                }
-            }
-            if (currentEntityAmount > world.getEntities().size()) {
-                for (Map.Entry<Entity, Polygon> polygon : polygons.entrySet()) {
-                    if (world.getEntity(polygon.getKey().getID()) == null) {
-                        gameWindow.getChildren().remove(polygon.getValue());
-                        polygons.remove(polygon.getKey());
-                    }
-                }
+
+        for (Entity entity : world.getEntities()) {
+            if (polygons.get(entity) == null) {
+                Polygon polygon = new Polygon(entity.getPolygonCoordinates());
+                polygons.put(entity, polygon);
+                gameWindow.getChildren().add(polygon);
             }
         }
-        currentEntityAmount = world.getEntities().size();
+
+        for (Map.Entry<Entity, Polygon> polygon : polygons.entrySet()) {
+            if (world.getEntity(polygon.getKey().getID()) == null) {
+                gameWindow.getChildren().remove(polygon.getValue());
+                polygons.remove(polygon.getKey());
+            }
+        }
     }
 
     private void draw() {
         for (Entity entity : world.getEntities()) {
             Polygon polygon = polygons.get(entity);
+            if (polygon == null) {
+                System.out.println("womp womp");
+            }
             if (polygon != null) {
                 polygon.setTranslateX(entity.getX());
                 polygon.setTranslateY(entity.getY());
