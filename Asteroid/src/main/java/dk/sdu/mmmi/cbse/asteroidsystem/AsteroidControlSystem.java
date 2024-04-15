@@ -38,14 +38,15 @@ public class AsteroidControlSystem implements IEntityProcessingService {
                 asteroid.setRotation(Math.random() * 20 + 270);
             }
             if (asteroid.isCollided()) {
-                Entity placeHolder = asteroid;
                 world.removeEntity(asteroid);
-                if (placeHolder.getRadius() > 10) {
-                    Entity asteroid1 = plugin.createAsteroid(placeHolder.getRadius() - 5, placeHolder.getX(), placeHolder.getY() - 50);
-                    asteroid1.setRotation(placeHolder.getRotation() + 35);
+                if (asteroid.getRadius() > 10) {
+                    Entity asteroid1 = plugin.createAsteroid(asteroid.getRadius() - 5, asteroid.getX(), asteroid.getY() - 50);
+                    asteroid1.setRotation(asteroid.getRotation() + 35);
+
+                    Entity asteroid2 = plugin.createAsteroid(asteroid.getRadius() - 5, asteroid.getX(), asteroid.getY() + 50);
+                    asteroid2.setRotation(asteroid.getRotation() - 35);
+
                     world.addEntity(asteroid1);
-                    Entity asteroid2 = plugin.createAsteroid(placeHolder.getRadius() - 5, placeHolder.getX(), placeHolder.getY() + 50);
-                    asteroid2.setRotation(placeHolder.getRotation() - 35);
                     world.addEntity(asteroid2);
                 }
             }
