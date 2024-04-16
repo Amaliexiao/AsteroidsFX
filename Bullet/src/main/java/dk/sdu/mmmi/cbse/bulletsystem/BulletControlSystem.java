@@ -13,8 +13,8 @@ public class BulletControlSystem implements IEntityProcessingService, BulletSPI 
     public void process(GameData gameData, World world) {
 
         for (Entity bullet : world.getEntities(Bullet.class)) {
-            double changeX = Math.cos(Math.toRadians(bullet.getRotation()))*4;
-            double changeY = Math.sin(Math.toRadians(bullet.getRotation()))*4;
+            double changeX = Math.cos(Math.toRadians(bullet.getRotation())) * 4;
+            double changeY = Math.sin(Math.toRadians(bullet.getRotation())) * 4;
             bullet.setX(bullet.getX() + changeX);
             bullet.setY(bullet.getY() + changeY);
 
@@ -33,21 +33,20 @@ public class BulletControlSystem implements IEntityProcessingService, BulletSPI 
             if (bullet.getY() > gameData.getDisplayHeight()) {
                 world.removeEntity(bullet);
             }
+            if(bullet.isCollided()){
+                world.removeEntity(bullet);
+            }
         }
     }
 
     @Override
     public Entity createBullet(Entity shooter, GameData gameData) {
         Entity bullet = new Bullet();
-        bullet.setX(shooter.getX()+(Math.cos(Math.toRadians(shooter.getRotation()))*10));
-        bullet.setY(shooter.getY()+(Math.sin(Math.toRadians(shooter.getRotation()))*10));
+        bullet.setX(shooter.getX() + (Math.cos(Math.toRadians(shooter.getRotation())) * 10));
+        bullet.setY(shooter.getY() + (Math.sin(Math.toRadians(shooter.getRotation())) * 10));
         bullet.setRotation(shooter.getRotation());
-        bullet.setPolygonCoordinates(-2,-2,2,-2,2,2,-2,2);
+        bullet.setPolygonCoordinates(-2, -2, 2, -2, 2, 2, -2, 2);
         bullet.setRadius(1);
         return bullet;
     }
-
-    private void setShape(Entity entity) {
-    }
-
 }

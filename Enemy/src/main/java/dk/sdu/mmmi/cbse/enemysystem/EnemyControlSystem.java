@@ -5,7 +5,6 @@ import dk.sdu.mmmi.cbse.common.data.Entity;
 import dk.sdu.mmmi.cbse.common.data.GameData;
 import dk.sdu.mmmi.cbse.common.data.World;
 import dk.sdu.mmmi.cbse.common.services.IEntityProcessingService;
-import dk.sdu.mmmi.cbse.common.services.IPostEntityProcessingService;
 
 import java.util.Collection;
 import java.util.ServiceLoader;
@@ -13,7 +12,7 @@ import java.util.ServiceLoader;
 import static java.util.stream.Collectors.toList;
 
 
-public class EnemyControlSystem implements IEntityProcessingService, IPostEntityProcessingService {
+public class EnemyControlSystem implements IEntityProcessingService{
     @Override
     public void process(GameData gameData, World world) {
         for (Entity enemy : world.getEntities(Enemy.class)) {
@@ -26,7 +25,7 @@ public class EnemyControlSystem implements IEntityProcessingService, IPostEntity
 
             if (100 * Math.random() > 98) {
                 for (BulletSPI bullet : getBulletSPIs()) {
-                    world.addEntity(bullet.createBullet(enemy,gameData));
+                    world.addEntity(bullet.createBullet(enemy, gameData));
                 }
             }
 
@@ -45,7 +44,9 @@ public class EnemyControlSystem implements IEntityProcessingService, IPostEntity
             if (enemy.getY() > gameData.getDisplayHeight() + 2) {
                 enemy.setY(-1);
             }
-
+            if(enemy.isCollided()){
+                world.removeEntity(enemy);
+            }
         }
     }
 
