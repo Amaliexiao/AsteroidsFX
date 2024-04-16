@@ -8,7 +8,7 @@ public class PlayerPlugin implements IGamePluginService{
 
     @Override
     public void start(GameData gameData, World world) {
-        System.out.println("Split the damn modules");
+        System.out.println("Hi from Split Module");
     }
 
     @Override
