@@ -121,7 +121,6 @@ public class Main extends Application {
             }
         }
 
-
         for (Map.Entry<Entity, Polygon> polygon : polygons.entrySet()) {
             if (world.getEntity(polygon.getKey().getID()) == null) {
                 gameWindow.getChildren().remove(polygon.getValue());
