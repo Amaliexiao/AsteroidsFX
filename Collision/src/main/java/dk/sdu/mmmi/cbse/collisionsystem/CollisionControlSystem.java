@@ -1,3 +1,4 @@
+
 package dk.sdu.mmmi.cbse.collisionsystem;
 
 import dk.sdu.mmmi.cbse.common.data.Entity;
@@ -13,12 +14,10 @@ public class CollisionControlSystem implements IPostEntityProcessingService {
                 if (entity1.getID().equals(entity2.getID())) {
                     continue;
                 }
-//                if(entity1.equals(Player.class)){
-//                    System.out.println("player detected");
-//                }
+
                 if (this.collides(entity1, entity2)) {
-                    world.removeEntity(entity1);
-                    world.removeEntity(entity2);
+                    entity1.setCollided(true);
+                    entity2.setCollided(true);
                 }
             }
         }
