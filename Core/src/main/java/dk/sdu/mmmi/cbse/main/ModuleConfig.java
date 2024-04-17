@@ -15,8 +15,8 @@ public class ModuleConfig {
     public ModuleConfig() {
     }
     @Bean
-    public Game game(){
-        return new Game(gamePluginServices(), entityProcessingServiceList(), postEntityProcessingServices());
+    public InterfaceConnection interfaceConnection(){
+        return new InterfaceConnection(gamePluginServices(), entityProcessingServiceList(), postEntityProcessingServices());
     }
     @Bean
     public List<IEntityProcessingService> entityProcessingServiceList(){

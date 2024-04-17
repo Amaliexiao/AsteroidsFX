@@ -27,7 +27,7 @@ public class Main extends Application {
     private final World world = new World();
     private final Map<Entity, Polygon> polygons = new ConcurrentHashMap<>();
     private Pane gameWindow;
-    private Game game;
+    private InterfaceConnection interfaceConnection;
 
     public static void main(String[] args) {
         launch(Main.class);
@@ -41,7 +41,7 @@ public class Main extends Application {
         for (String beanName : ctx.getBeanDefinitionNames()) {
             System.out.println(beanName);
         }
-        game = ctx.getBean(Game.class);
+        interfaceConnection = ctx.getBean(InterfaceConnection.class);
 
         Text text = new Text(10, 20, "Destroyed asteroids: 0");
         gameWindow = new Pane();
@@ -80,7 +80,7 @@ public class Main extends Application {
         });
 
         // Lookup all Game Plugins using ServiceLoader
-        for (IGamePluginService iGamePlugin : game.getGamePluginServices()) {
+        for (IGamePluginService iGamePlugin : interfaceConnection.getGamePluginServices()) {
             iGamePlugin.start(gameData, world);
         }
         for (Entity entity : world.getEntities()) {
@@ -113,10 +113,10 @@ public class Main extends Application {
 
     private void update() {
 
-        for (IEntityProcessingService entityProcessorService : game.getEntityProcessingServices()) {
+        for (IEntityProcessingService entityProcessorService : interfaceConnection.getEntityProcessingServices()) {
             entityProcessorService.process(gameData, world);
         }
-        for (IPostEntityProcessingService postEntityProcessorService : game.getPostEntityProcessingServices()) {
+        for (IPostEntityProcessingService postEntityProcessorService : interfaceConnection.getPostEntityProcessingServices()) {
             postEntityProcessorService.process(gameData, world);
         }
         for (Entity entity : world.getEntities()) {
