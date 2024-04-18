@@ -25,7 +25,7 @@ public class EnemyControlSystem implements IEntityProcessingService {
 
             if (1000 * Math.random() > 970) {
                 for (BulletSPI bullet : getBulletSPIs()) {
-                    world.addEntity(bullet.createBullet(enemy, gameData));
+                    world.addEntity(bullet.createBullet(enemy, gameData,false));
                 }
             }
 
